@@ -25,9 +25,10 @@ const App: React.FC = () => {
   }, []);
 
   const handleSaveApiKey = () => {
-    if (tempApiKey.trim()) {
-      setApiKey(tempApiKey);
-      localStorage.setItem('gemini-api-key', tempApiKey);
+    const trimmedKey = tempApiKey.trim();
+    if (trimmedKey) {
+      setApiKey(trimmedKey);
+      localStorage.setItem('gemini-api-key', trimmedKey);
       setError(null);
     } else {
       setError('Por favor, introduza uma chave de API válida.');
@@ -74,8 +75,8 @@ const App: React.FC = () => {
     } catch (err) {
       console.error(err);
       if (err instanceof Error) {
-        if (err.message.includes('API key not valid') || err.message.includes('invalid')) {
-          setError('A chave de API fornecida é inválida. Por favor, verifique e tente novamente.');
+        if (err.message.toLowerCase().includes('api key not valid') || err.message.toLowerCase().includes('invalid')) {
+          setError('A chave de API fornecida é inválida. Por favor, verifique se a copiou corretamente, sem espaços extra, e tente novamente.');
         } else {
           // Exibe a mensagem de erro mais detalhada vinda do serviço.
           setError(err.message);
