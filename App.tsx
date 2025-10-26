@@ -43,7 +43,11 @@ const App: React.FC = () => {
       }
     } catch (err) {
       console.error(err);
-      setError('Ocorreu um erro ao otimizar as rotas. Por favor, tente novamente.');
+      if (err instanceof Error && err.message.includes('API_KEY')) {
+         setError('A chave de API não está configurada ou é inválida. Por favor, verifique as configurações do seu ambiente.');
+      } else {
+        setError('Ocorreu um erro ao otimizar as rotas. Por favor, tente novamente.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -59,7 +63,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans text-slate-800 flex flex-col items-center p-4 sm:p-6 md:p-8">
+    <div className="min-h-screen bg-slate-100 font-sans text-slate-800 flex flex-col items-center justify-center p-4 sm:p-6 md:p-8">
       <div className="w-full max-w-6xl mx-auto">
         <header className="text-center mb-8">
           <div className="flex justify-center items-center gap-4">
@@ -69,7 +73,7 @@ const App: React.FC = () => {
             </h1>
           </div>
           <p className="mt-2 text-lg text-slate-600">
-            Mostra-me a tua lista e eu faço duas rotas optimizadas
+            Mostra-me a tua lista e eu faço rotas optimizadas
           </p>
         </header>
 

@@ -21,7 +21,7 @@ const cleanJsonString = (str: string): string => {
 
 export const optimizeRoutesWithImage = async (imageFile: File, numberOfDrivers: number): Promise<{ routes: Route[] | null, groundingInfo: any[] | null }> => {
   if (!process.env.API_KEY) {
-    throw new Error("API_KEY environment variable not set");
+    throw new Error("A variável de ambiente API_KEY não está definida. Por favor, configure a sua chave de API.");
   }
 
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
