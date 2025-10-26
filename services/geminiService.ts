@@ -65,17 +65,31 @@ export const optimizeRoutesWithImage = async (apiKey: string, imageFile: File, n
   const groundingInfo = response.candidates?.[0]?.groundingMetadata?.groundingChunks || null;
 
   if (!text) {
-    console.error("Gemini API returned an empty response.");
+    console.error("A API Gemini retornou uma resposta vazia.");
     return { routes: null, groundingInfo };
   }
   
   try {
     const cleanedText = cleanJsonString(text);
     const parsedRoutes: Route[] = JSON.parse(cleanedText);
+
+    // Adiciona uma validação simples para garantir que temos um array
+    if (!Array.isArray(parsedRoutes)) {
+      throw new Error("A resposta da IA não continha uma lista de rotas válida.");
+    }
+
     return { routes: parsedRoutes, groundingInfo };
   } catch (error) {
-    console.error("Failed to parse JSON response from Gemini:", error);
-    console.error("Original response text:", text);
-    throw new Error("Failed to parse routes from Gemini response.");
+    console.error("Falha ao analisar a resposta JSON da Gemini:", error);
+    console.error("Texto da resposta original:", text);
+    
+    // Se a resposta não parece ser JSON, é provável que seja uma explicação em texto do erro.
+    if (!text.trim().startsWith('[') && !text.trim().startsWith('{')) {
+      // Mostra a mensagem da IA diretamente, pois pode ser útil.
+      throw new Error(`A IA retornou uma mensagem em vez dos dados da rota: "${text}"`);
+    }
+    
+    // Caso contrário, é um erro de formatação do JSON ou outro problema de análise.
+    throw new Error("Não foi possível processar os dados da rota da IA. Verifique se a imagem está clara e tente novamente.");
   }
 };
