@@ -1,0 +1,5 @@
+{
+  "name": "Otimizador de Rotas de Entrega",
+  "description": "Uma aplicação para otimizar rotas de entrega a partir de uma imagem de uma lista de moradas, dividindo-as eficientemente entre dois motoristas.",
+  "requestFramePermissions": []
+}
