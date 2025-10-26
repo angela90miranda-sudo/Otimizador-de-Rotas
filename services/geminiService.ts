@@ -30,12 +30,8 @@ const cleanJsonString = (str: string): string => {
   return cleaned;
 };
 
-export const optimizeRoutesWithImage = async (imageFile: File, numberOfDrivers: number): Promise<{ routes: Route[] | null, groundingInfo: any[] | null }> => {
-  if (!process.env.API_KEY) {
-    throw new Error("A variável de ambiente API_KEY não está definida. Por favor, configure a sua chave de API.");
-  }
-
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+export const optimizeRoutesWithImage = async (apiKey: string, imageFile: File, numberOfDrivers: number): Promise<{ routes: Route[] | null, groundingInfo: any[] | null }> => {
+  const ai = new GoogleGenAI({ apiKey });
   const imagePart = await fileToGenerativePart(imageFile);
   
   const driverCountText = numberOfDrivers === 2 ? 'duas' : 'três';
