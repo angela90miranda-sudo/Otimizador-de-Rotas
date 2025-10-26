@@ -40,17 +40,26 @@ const StopCard: React.FC<{ stop: Stop }> = ({ stop }) => (
 const RouteDisplay: React.FC<RouteDisplayProps> = ({ routes, groundingInfo }) => {
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {routes.map((route, index) => (
-          <div key={index} className="bg-white p-6 rounded-xl shadow-md border border-slate-100">
-            <h3 className="text-xl font-bold mb-4 text-blue-700">{route.driver}</h3>
-            <div>
-              {route.route.sort((a, b) => a.stop - b.stop).map((stop, stopIndex) => (
-                <StopCard key={stopIndex} stop={stop} />
-              ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {routes.map((route, index) => {
+          const totalBoxes = route.route.reduce((sum, stop) => sum + (stop.caixas || 0), 0);
+          return (
+            <div key={index} className="bg-white p-6 rounded-xl shadow-md border border-slate-100">
+              <div className="flex justify-between items-center mb-4 pb-2 border-b">
+                 <h3 className="text-xl font-bold text-blue-700">{route.driver}</h3>
+                 <div className="flex items-center text-sm font-semibold text-slate-700 bg-slate-100 rounded-full px-3 py-1">
+                    <BoxIcon className="w-4 h-4 mr-1.5 text-slate-500" />
+                    <span>{totalBoxes} caixas</span>
+                 </div>
+              </div>
+              <div>
+                {route.route.sort((a, b) => a.stop - b.stop).map((stop, stopIndex) => (
+                  <StopCard key={stopIndex} stop={stop} />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       {groundingInfo && groundingInfo.length > 0 && (
         <div className="mt-8 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">

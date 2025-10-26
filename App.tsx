@@ -13,6 +13,7 @@ const App: React.FC = () => {
   const [groundingInfo, setGroundingInfo] = useState<any[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [numberOfDrivers, setNumberOfDrivers] = useState<number>(2);
 
   const handleImageUpload = (file: File) => {
     setImageFile(file);
@@ -33,7 +34,7 @@ const App: React.FC = () => {
     setGroundingInfo(null);
 
     try {
-      const result = await optimizeRoutesWithImage(imageFile);
+      const result = await optimizeRoutesWithImage(imageFile, numberOfDrivers);
       if (result.routes && result.routes.length > 0) {
         setRoutes(result.routes);
         setGroundingInfo(result.groundingInfo || null);
@@ -46,7 +47,7 @@ const App: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [imageFile]);
+  }, [imageFile, numberOfDrivers]);
 
   const handleReset = () => {
     setImageFile(null);
@@ -54,6 +55,7 @@ const App: React.FC = () => {
     setError(null);
     setIsLoading(false);
     setGroundingInfo(null);
+    setNumberOfDrivers(2);
   };
 
   return (
@@ -86,13 +88,40 @@ const App: React.FC = () => {
                   <LoadingSpinner />
                 </div>
               ) : (
-                <button
-                  onClick={handleOptimization}
-                  disabled={!imageFile}
-                  className="mt-8 px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors duration-300"
-                >
-                  Otimizar Rotas
-                </button>
+                imageFile && (
+                  <div className="flex flex-col items-center w-full">
+                    <div className="mt-8 flex justify-center items-center gap-4">
+                      <span className="font-semibold text-slate-600">Número de Motoristas:</span>
+                      <div className="flex rounded-lg bg-slate-200 p-1">
+                        <button
+                          onClick={() => setNumberOfDrivers(2)}
+                          className={`px-4 py-1 rounded-md text-sm font-semibold transition-colors ${
+                            numberOfDrivers === 2 ? 'bg-white shadow text-blue-600' : 'text-slate-500 hover:bg-slate-300'
+                          }`}
+                          aria-pressed={numberOfDrivers === 2}
+                        >
+                          2
+                        </button>
+                        <button
+                          onClick={() => setNumberOfDrivers(3)}
+                          className={`px-4 py-1 rounded-md text-sm font-semibold transition-colors ${
+                            numberOfDrivers === 3 ? 'bg-white shadow text-blue-600' : 'text-slate-500 hover:bg-slate-300'
+                          }`}
+                          aria-pressed={numberOfDrivers === 3}
+                        >
+                          3
+                        </button>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleOptimization}
+                      disabled={!imageFile}
+                      className="mt-4 px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors duration-300"
+                    >
+                      Otimizar Rotas
+                    </button>
+                  </div>
+                )
               )}
             </div>
           ) : (

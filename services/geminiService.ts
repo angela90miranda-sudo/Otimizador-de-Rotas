@@ -19,16 +19,19 @@ const cleanJsonString = (str: string): string => {
   return cleaned;
 };
 
-export const optimizeRoutesWithImage = async (imageFile: File): Promise<{ routes: Route[] | null, groundingInfo: any[] | null }> => {
+export const optimizeRoutesWithImage = async (imageFile: File, numberOfDrivers: number): Promise<{ routes: Route[] | null, groundingInfo: any[] | null }> => {
   if (!process.env.API_KEY) {
     throw new Error("API_KEY environment variable not set");
   }
 
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const imagePart = await fileToGenerativePart(imageFile);
+  
+  const driverCountText = numberOfDrivers === 2 ? 'duas' : 'três';
+  const driverNames = Array.from({ length: numberOfDrivers }, (_, i) => `'Motorista ${i + 1}'`).join(', ');
 
   const prompt = `
-    Você é um especialista em otimização de logística. Com base na lista de entregas na imagem fornecida, crie duas rotas eficientes e otimizadas para dois motoristas distintos, chamados 'Motorista 1' e 'Motorista 2'. Use seu conhecimento de geografia e planejamento de rotas para agrupar locais próximos.
+    Você é um especialista em otimização de logística. Com base na lista de entregas na imagem fornecida, crie ${driverCountText} rotas eficientes e otimizadas para ${numberOfDrivers} motoristas distintos, chamados ${driverNames}. Use seu conhecimento de geografia e planejamento de rotas para agrupar locais próximos.
 
     Forneça a saída como um único array JSON minificado. Não inclua nenhum texto antes ou depois do array JSON. Cada objeto no array deve representar a rota de um motorista e deve ter duas chaves: 'driver' (uma string, por exemplo, 'Motorista 1') e 'route' (um array de objetos de parada).
 
