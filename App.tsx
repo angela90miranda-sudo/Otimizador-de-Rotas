@@ -67,7 +67,7 @@ const App: React.FC = () => {
             </h1>
           </div>
           <p className="mt-2 text-lg text-slate-600">
-            Carregue uma imagem da sua lista de entregas e nós criaremos duas rotas otimizadas.
+            Mostra-me a tua lista e eu faço duas rotas optimizadas
           </p>
         </header>
 
@@ -120,4 +120,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-    
