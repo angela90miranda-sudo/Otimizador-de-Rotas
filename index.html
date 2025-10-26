@@ -18,60 +18,65 @@
 </script>
 <style>
   @media print {
-    /* Por defeito, esconde tudo quando a impressão é ativada no body */
-    body.is-printing > #root > div > div > * {
+    /* Esconde elementos da UI que não são necessários na impressão */
+    body.is-printing header,
+    body.is-printing footer,
+    body.is-printing .print-button,
+    body.is-printing h2.text-2xl, /* Título "Rotas Geradas" */
+    body.is-printing button:not(.print-button) /* Botão "Começar de Novo" */
+    {
       display: none;
     }
 
-    /* Mostra o container <main> e reseta os seus estilos */
-    body.is-printing main {
-      display: block !important;
-      box-shadow: none !important;
-      background: transparent !important;
-      padding: 0 !important;
-      margin: 0 !important;
-    }
-    
-    /* Esconde os controlos dentro do main (título, botão 'Começar de Novo') */
-    body.is-printing main > div > .flex.justify-between {
+    /* Esconde todos os cartões de rota que NÃO são o que está a ser impresso */
+    body.is-printing .route-card-container:not(#currently-printing) {
       display: none;
     }
     
-    /* Esconde a informação de fontes do Google Maps */
-    body.is-printing .grounding-info-container {
-      display: none;
-    }
-    
-    /* Esconde todos os cartões de rota por defeito */
-    body.is-printing .route-card-container {
-      display: none;
-    }
-    
-    /* Força o container da grelha a ser um bloco para que o filho possa ser visível */
+    /* Remove o layout de grelha para que o elemento único possa preencher o espaço */
     body.is-printing .grid {
-      display: block !important;
-      gap: 0 !important;
+        display: block;
     }
-    
-    /* Finalmente, mostra apenas o cartão de rota que está a ser impresso */
+
+    /* Estiliza o cartão de rota selecionado para ocupar a página de impressão */
     body.is-printing #currently-printing {
-      display: block !important;
+      position: absolute;
+      left: 0;
+      top: 0;
       width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 1rem;
       border: none !important;
       box-shadow: none !important;
-      padding: 0 !important;
-      margin: 0 !important;
+    }
+    
+    /* Limpeza geral dos estilos para uma impressão limpa */
+    body.is-printing .bg-white, 
+    body.is-printing .bg-slate-50 { 
+        background-color: transparent !important; 
+    }
+    body.is-printing .shadow-md, 
+    body.is-printing .shadow-sm { 
+        box-shadow: none !important; 
+    }
+    body.is-printing .border, 
+    body.is-printing .border-slate-200, 
+    body.is-printing .border-b { 
+        border-color: #ccc !important; 
+    }
+    body.is-printing * { 
+        color: #000 !important; 
+    }
+    body.is-printing .stop-card { 
+        page-break-inside: avoid; 
+        border: 1px solid #ddd; 
+    }
+    body.is-printing .transform {
+        transform: none !important;
     }
 
-    /* Estilos gerais para o conteúdo impresso */
-    #currently-printing .print-button { display: none; }
-    #currently-printing .transform { transform: none !important; }
-    #currently-printing .bg-white, #currently-printing .bg-slate-50 { background-color: transparent !important; }
-    #currently-printing .shadow-md, #currently-printing .shadow-sm { box-shadow: none !important; }
-    #currently-printing .border-slate-200 { border-color: #ccc !important; }
-    #currently-printing * { color: #000 !important; }
-    #currently-printing .stop-card { page-break-inside: avoid; border: 1px solid #ddd; }
-
+    /* Define as propriedades da página */
     @page {
       size: A4;
       margin: 1.5cm;

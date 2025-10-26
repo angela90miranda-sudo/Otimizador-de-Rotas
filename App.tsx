@@ -124,9 +124,20 @@ const App: React.FC = () => {
       >
         Guardar e Continuar
       </button>
-       <p className="mt-4 text-xs text-slate-500">
-        A sua chave de API é guardada localmente no seu navegador e nunca é partilhada.
-      </p>
+       <div className="mt-4 text-xs text-slate-500 text-left bg-slate-100 p-3 rounded-lg">
+          <p className="font-semibold text-slate-600 mb-1">Como obter a sua chave de API:</p>
+          <ul className="list-disc list-inside space-y-1">
+              <li>
+                  Pode obter a sua chave de API no <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">Google AI Studio</a>.
+              </li>
+              <li>
+                  Certifique-se de que o <strong>faturamento (billing)</strong> está ativado para o projeto Google Cloud associado à sua chave.
+              </li>
+          </ul>
+          <p className="mt-2 pt-2 border-t border-slate-200">
+            A sua chave de API é guardada localmente no seu navegador e nunca é partilhada.
+          </p>
+      </div>
     </div>
   );
 
