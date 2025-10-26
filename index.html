@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -17,10 +16,71 @@
   }
 }
 </script>
+<style>
+  @media print {
+    /* Por defeito, esconde tudo quando a impressão é ativada no body */
+    body.is-printing > #root > div > div > * {
+      display: none;
+    }
+
+    /* Mostra o container <main> e reseta os seus estilos */
+    body.is-printing main {
+      display: block !important;
+      box-shadow: none !important;
+      background: transparent !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+    
+    /* Esconde os controlos dentro do main (título, botão 'Começar de Novo') */
+    body.is-printing main > div > .flex.justify-between {
+      display: none;
+    }
+    
+    /* Esconde a informação de fontes do Google Maps */
+    body.is-printing .grounding-info-container {
+      display: none;
+    }
+    
+    /* Esconde todos os cartões de rota por defeito */
+    body.is-printing .route-card-container {
+      display: none;
+    }
+    
+    /* Força o container da grelha a ser um bloco para que o filho possa ser visível */
+    body.is-printing .grid {
+      display: block !important;
+      gap: 0 !important;
+    }
+    
+    /* Finalmente, mostra apenas o cartão de rota que está a ser impresso */
+    body.is-printing #currently-printing {
+      display: block !important;
+      width: 100%;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    /* Estilos gerais para o conteúdo impresso */
+    #currently-printing .print-button { display: none; }
+    #currently-printing .transform { transform: none !important; }
+    #currently-printing .bg-white, #currently-printing .bg-slate-50 { background-color: transparent !important; }
+    #currently-printing .shadow-md, #currently-printing .shadow-sm { box-shadow: none !important; }
+    #currently-printing .border-slate-200 { border-color: #ccc !important; }
+    #currently-printing * { color: #000 !important; }
+    #currently-printing .stop-card { page-break-inside: avoid; border: 1px solid #ddd; }
+
+    @page {
+      size: A4;
+      margin: 1.5cm;
+    }
+  }
+</style>
 </head>
   <body class="bg-slate-50">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>
 </html>
-    

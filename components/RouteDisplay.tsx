@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Route, Stop } from '../types';
-import { MapPinIcon, BoxIcon, MapIcon, PhoneIcon } from './Icons';
+import { MapPinIcon, BoxIcon, MapIcon, PhoneIcon, PrinterIcon } from './Icons';
 
 interface RouteDisplayProps {
   routes: Route[];
@@ -9,7 +9,7 @@ interface RouteDisplayProps {
 }
 
 const StopCard: React.FC<{ stop: Stop }> = ({ stop }) => (
-  <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-4 shadow-sm transform hover:scale-[1.02] transition-transform duration-300">
+  <div className="stop-card bg-slate-50 border border-slate-200 rounded-lg p-4 mb-4 shadow-sm transform hover:scale-[1.02] transition-transform duration-300">
     <div className="flex items-start">
       <div className="flex-shrink-0 mr-4 mt-1">
         <span className="flex items-center justify-center w-8 h-8 bg-blue-500 text-white font-bold rounded-full">
@@ -38,18 +38,44 @@ const StopCard: React.FC<{ stop: Stop }> = ({ stop }) => (
 );
 
 const RouteDisplay: React.FC<RouteDisplayProps> = ({ routes, groundingInfo }) => {
+
+  const handlePrint = (routeIndex: number) => {
+    const routeToPrint = document.querySelectorAll('.route-card-container')[routeIndex];
+    if (!routeToPrint) return;
+
+    const onAfterPrint = () => {
+      document.body.classList.remove('is-printing');
+      routeToPrint.removeAttribute('id');
+      window.removeEventListener('afterprint', onAfterPrint);
+    };
+
+    window.addEventListener('afterprint', onAfterPrint);
+    document.body.classList.add('is-printing');
+    routeToPrint.setAttribute('id', 'currently-printing');
+    window.print();
+  };
+
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {routes.map((route, index) => {
           const totalBoxes = route.route.reduce((sum, stop) => sum + (stop.caixas || 0), 0);
           return (
-            <div key={index} className="bg-white p-6 rounded-xl shadow-md border border-slate-100">
+            <div key={index} className="route-card-container bg-white p-6 rounded-xl shadow-md border border-slate-100">
               <div className="flex justify-between items-center mb-4 pb-2 border-b">
                  <h3 className="text-xl font-bold text-blue-700">{route.driver}</h3>
-                 <div className="flex items-center text-sm font-semibold text-slate-700 bg-slate-100 rounded-full px-3 py-1">
-                    <BoxIcon className="w-4 h-4 mr-1.5 text-slate-500" />
-                    <span>{totalBoxes} caixas</span>
+                 <div className="flex items-center gap-2">
+                    <div className="flex items-center text-sm font-semibold text-slate-700 bg-slate-100 rounded-full px-3 py-1">
+                        <BoxIcon className="w-4 h-4 mr-1.5 text-slate-500" />
+                        <span>{totalBoxes} caixas</span>
+                    </div>
+                    <button
+                      onClick={() => handlePrint(index)}
+                      className="print-button p-2 rounded-full text-slate-500 hover:bg-slate-200 hover:text-slate-700 transition-colors"
+                      title={`Imprimir rota para ${route.driver}`}
+                    >
+                      <PrinterIcon className="w-5 h-5" />
+                    </button>
                  </div>
               </div>
               <div>
@@ -62,7 +88,7 @@ const RouteDisplay: React.FC<RouteDisplayProps> = ({ routes, groundingInfo }) =>
         })}
       </div>
       {groundingInfo && groundingInfo.length > 0 && (
-        <div className="mt-8 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+        <div className="grounding-info-container mt-8 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
           <div className="flex">
             <div className="flex-shrink-0">
               <MapIcon className="h-5 w-5 text-blue-600" aria-hidden="true" />
