@@ -14,8 +14,19 @@ const fileToGenerativePart = async (file: File) => {
 };
 
 const cleanJsonString = (str: string): string => {
-  // Remove markdown code block fences and trim whitespace
-  const cleaned = str.replace(/```json/g, '').replace(/```/g, '').trim();
+  // Remove markdown code block fences first.
+  let cleaned = str.replace(/```json/g, '').replace(/```/g, '').trim();
+
+  // Find the start of the array and the end of the array.
+  const startIndex = cleaned.indexOf('[');
+  const endIndex = cleaned.lastIndexOf(']');
+
+  if (startIndex !== -1 && endIndex !== -1 && endIndex > startIndex) {
+    // Extract just the array part.
+    return cleaned.substring(startIndex, endIndex + 1);
+  }
+
+  // Fallback to the old behavior if no array is found.
   return cleaned;
 };
 
